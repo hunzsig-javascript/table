@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import {Checkbox, Table} from '@icedesign/base';
-import {Button, Tag, Modal, Pagination} from 'antd';
+import {Button, Tag, Modal, Pagination, Checkbox, Table} from 'antd';
 import FilterForm from './../Filter';
 import FilterBalloon from './FilterBalloon';
-import Parse from '../../common/Parse';
-import I18n from "../../common/I18n";
+import {I18n, Parse} from "foundation";
 
 export default class LocalTable extends Component {
   static defaultProps = {};
@@ -34,7 +32,7 @@ export default class LocalTable extends Component {
       isSearch: typeof this.props.isSearch === 'boolean' ? this.props.isSearch : false,
     };
     // 加序号
-    this.state.display.unshift({field: 'serial', name: I18n.tr('serial'), width: 100});
+    this.state.display.unshift({field: 'serial', name: I18n('SERIAL'), width: 100});
     this.filter.forEach((val) => {
       if (this.state.params[val.field] === undefined && val.value && val.value.length > 0) {
         this.state.params[val.field] = val.value;
@@ -148,7 +146,7 @@ export default class LocalTable extends Component {
       maskClosable: true,
       className: 'vertical-center-modal',
       content: this.renderChooseCol(),
-      title: I18n.tr('chooseDisplayCol'),
+      title: I18n('CHOOSE_DISPLAY_COL'),
       onOk: () => {
         this.changedCols.forEach((ccf) => {
           this.props.table.display.forEach((ptd) => {
@@ -169,7 +167,7 @@ export default class LocalTable extends Component {
       width: 650,
       maskClosable: true,
       className: 'vertical-center-modal hideFooter',
-      title: title || I18n.tr('bigPicture'),
+      title: title || I18n('BIG_PICTURE'),
       content: (
         <img style={{width: '500px', verticalAlign: 'middle'}} alt={src} src={Parse.img(src)}/>
       ),
@@ -304,25 +302,28 @@ export default class LocalTable extends Component {
         <h2 style={styles.contentTitle}>
           <div>
             {this.title.length > 0 && <span>{this.title}</span>}
-            {typeof this.onAdd === 'function' && <Button type="primary" size="small" style={{marginLeft: '3px'}}
-                                                         onClick={this.onAdd}>{I18n.tr('add')}</Button>}
-            {typeof this.prepareExcel === 'function' && <Button type="default" size="small" style={{marginLeft: '3px'}}
-                                                                onClick={this.prepareExcel}>{I18n.tr('export')}</Button>}
+            {typeof this.onAdd === 'function'
+            && <Button type="primary" size="small" style={{marginLeft: '3px'}}
+                       onClick={this.onAdd}>{I18n('ADD')}</Button>}
+            {typeof this.prepareExcel === 'function'
+            && <Button type="default" size="small" style={{marginLeft: '3px'}}
+                       onClick={this.prepareExcel}>{I18n('EXPORT')}</Button>}
           </div>
         </h2>
         <div style={{position: 'relative', height: '30px'}}>
           <div style={{textAlign: 'right'}}>
             <div style={{position: 'absolute', top: 0, textAlign: 'left'}}>
               {this.state.page &&
-              <Tag>{I18n.tr('total') + this.state.dataSourceNotPage.length + I18n.tr('results')}</Tag>}
-              {this.state.page && <Tag>{I18n.tr('inPage') + this.state.dataSource.length + I18n.tr('results')}</Tag>}
+              <Tag>{I18n('TOTAL') + this.state.dataSourceNotPage.length + I18n('RESULTS')}</Tag>}
+              {this.state.page && <Tag>{I18n('IN_PAGE') + this.state.dataSource.length + I18n('RESULTS')}</Tag>}
             </div>
             <Button.Group size="small">
-              {this.filter.length > 0 && <Button type={this.state.isSearch ? 'primary' : 'default'}
-                                                 onClick={this.colSearch}> {this.state.isSearch ? I18n.tr('searchHide') : I18n.tr('searchShow')} </Button>}
+              {this.filter.length > 0
+              && <Button type={this.state.isSearch ? 'primary' : 'default'}
+                         onClick={this.colSearch}> {this.state.isSearch ? I18n('SEARCH_HIDE') : I18n('SEARCH_SHOW')} </Button>}
               <Button type={this.state.isLockCol ? 'primary' : 'default'}
-                      onClick={this.colLock}> {this.state.isLockCol ? I18n.tr('tableHeadUnLock') : I18n.tr('tableHeadLock')} </Button>
-              <Button onClick={this.colChoose}> {I18n.tr('chooseDisplayCol')}({this.changedCols.length}) </Button>
+                      onClick={this.colLock}> {this.state.isLockCol ? I18n('TABLE_HEAD_UN_LOCK') : I18n('TABLE_HEAD_LOCK')} </Button>
+              <Button onClick={this.colChoose}> {I18n('CHOOSE_DISPLAY_COL')}({this.changedCols.length}) </Button>
             </Button.Group>
           </div>
         </div>
@@ -371,7 +372,7 @@ export default class LocalTable extends Component {
             })
           }
           <Table.Column
-            title={I18n.tr('operation')}
+            title={I18n('OPERATION')}
             width={200}
             cell={this.renderOperations}
           />

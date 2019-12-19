@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { Table } from '@icedesign/base';
-import { Spin, message, Button, Alert, Modal } from 'antd';
+import React, {Component} from 'react';
+import {Spin, message, Button, Alert, Modal, Table} from 'antd';
 import CommonBalloon from './../CommonBalloon';
-import ThisForm from './../DesktopForm';
-import Index from '../../common/Api';
-import I18n from "../../common/I18n";
+import {DesktopForm} from 'form';
+import {Api} from 'api';
+import {I18n} from "foundation";
 
 class ThisPage extends Component {
   static propTypes = {};
@@ -18,7 +17,7 @@ class ThisPage extends Component {
       loading: true,
       operation: [
         {
-          name: I18n.tr('edit'),
+          name: I18n('EDIT'),
           type: 'button',
           onClick: this.doModify,
           button: {
@@ -27,7 +26,7 @@ class ThisPage extends Component {
           },
         },
         {
-          name: I18n.tr('delete'),
+          name: I18n('DELETE'),
           type: 'balloon',
           onClick: (data) => {
             this.doDelete(data);
@@ -41,7 +40,7 @@ class ThisPage extends Component {
           },
         },
         {
-          name: I18n.tr('moveUp'),
+          name: I18n('MOVE_UP'),
           type: 'orderingUp',
           onClick: this.doUp,
           button: {
@@ -50,7 +49,7 @@ class ThisPage extends Component {
           },
         },
         {
-          name: I18n.tr('moveDown'),
+          name: I18n('MOVE_DOWN'),
           type: 'orderingDown',
           onClick: this.doDown,
           button: {
@@ -61,8 +60,8 @@ class ThisPage extends Component {
       ],
     };
     this.jsonKey = this.props.jsonKey; // 对应数据库里的key
-    this.jsonName = this.props.jsonName || I18n.tr('unKnow'); // 对应数据库里的name
-    this.jsonTips = this.props.jsonTips || { add: '', edit: I18n.tr('noTips') };
+    this.jsonName = this.props.jsonName || I18n('UN_KNOW'); // 对应数据库里的name
+    this.jsonTips = this.props.jsonTips || {add: '', edit: I18n('NO_TIPS')};
     this.jsonFields = this.props.jsonFields || {}; // 数据所有的field
     this.jsonShow = this.props.jsonShow || []; // 数据展示的field
     this.jsonValues = this.props.jsonValues || []; // 数据支持修改的field
@@ -91,7 +90,7 @@ class ThisPage extends Component {
     this.setState({
       loading: true,
     });
-    Index.real('System.Data.getInfo', { key: this.jsonKey }, (res) => {
+    Api.real('System.Data.getInfo', {key: this.jsonKey}, (res) => {
       if (res.code === 200) {
         const data = res.data.system_data_data;
         this.setState({
@@ -106,16 +105,16 @@ class ThisPage extends Component {
     const jsonValues = JSON.parse(JSON.stringify(this.jsonValues));
     const modal = Modal.warning({
       width: 800,
-      title: `${I18n.tr('add')}${this.jsonName}`,
+      title: `${I18n('ADD')}${this.jsonName}`,
       maskClosable: true,
       className: 'vertical-center-modal hideFooter',
       content: (
         <div>
           {
             this.jsonTips.add && this.jsonTips.add.length > 0 &&
-            <Alert message={this.jsonTips.add} type="warning" banner showIcon={false} />
+            <Alert message={this.jsonTips.add} type="warning" banner showIcon={false}/>
           }
-          <ThisForm form={{
+          <DesktopForm form={{
             scope: 'System.Data.edit',
             refresh: true,
             valueFormatter: (result) => {
@@ -138,20 +137,14 @@ class ThisPage extends Component {
               for (const f in this.jsonFields) {
                 if (jsonValuesRequired[f] === true) {
                   if (result[f] === undefined || result[f] === null) {
-                    error = `${I18n.tr('pleaseTypeValue')} ${f}`;
+                    error = `${I18n('PLEASE_TYPE_VALUE')} ${f}`;
                     break;
                   }
                 }
                 if (jsonValuesUnique[f] === true) {
                   for (const i in this.state.data) {
                     if (this.state.data[i][f] === result[f]) {
-                      error = `
-                        ${I18n.tr('sameAlreadyExists')}
-                        ${f}
-                        ${I18n.tr(',')}
-                        ${I18n.tr('pleaseSetOthers')}
-                        ${f}
-                      `;
+                      error = `${I18n('SAME_ALREADY_EXISTS')}${f},${I18n('PLEASE_SET_OTHERS')}${f}`;
                       break;
                     }
                   }
@@ -166,7 +159,7 @@ class ThisPage extends Component {
               }
               this.state.data = this.rebuildData(this.state.data);
               this.state.data.push(temp);
-              return { key: this.jsonKey, data: this.state.data };
+              return {key: this.jsonKey, data: this.state.data};
             },
             onSuccess: () => {
               modal.destroy();
@@ -183,7 +176,7 @@ class ThisPage extends Component {
             operation: [
               {
                 type: 'submit',
-                label: I18n.tr('sure'),
+                label: I18n('SURE'),
               },
             ],
           }}
@@ -200,16 +193,16 @@ class ThisPage extends Component {
     }
     const modal = Modal.info({
       width: 800,
-      title: `${I18n.tr('edit')}${this.jsonName}`,
+      title: `${I18n('EDIT')}${this.jsonName}`,
       maskClosable: true,
       className: 'vertical-center-modal hideFooter',
       content: (
         <div>
           {
             this.jsonTips.edit && this.jsonTips.edit.length > 0 &&
-            <Alert message={this.jsonTips.edit} type="info" banner showIcon={false} />
+            <Alert message={this.jsonTips.edit} type="info" banner showIcon={false}/>
           }
-          <ThisForm form={{
+          <DesktopForm form={{
             scope: 'System.Data.edit',
             refresh: true,
             valueFormatter: (result) => {
@@ -232,20 +225,14 @@ class ThisPage extends Component {
               for (const f in this.jsonFields) {
                 if (jsonValuesRequired[f] === true) {
                   if (result[f] === undefined || result[f] === null) {
-                    error = `${I18n.tr('pleaseTypeValue')} ${f}`;
+                    error = `${I18n('PLEASE_TYPE_VALUE')} ${f}`;
                     break;
                   }
                 }
                 if (jsonValuesUnique[f] === true) {
                   for (const i in this.state.data) {
                     if (this.state.data[i][f] === result[f] && this.state.data[i].serial !== temp.serial) {
-                      error = `
-                        ${I18n.tr('sameAlreadyExists')}
-                        ${f}
-                        ${I18n.tr(',')}
-                        ${I18n.tr('pleaseSetOthers')}
-                        ${f}
-                      `;
+                      error = `${I18n('SAME_ALREADY_EXISTS')}${f},${I18n('PLEASE_SET_OTHERS')}${f}`;
                       break;
                     }
                   }
@@ -260,7 +247,7 @@ class ThisPage extends Component {
               }
               this.state.data[data.serial - 1] = temp;
               this.state.data = this.rebuildData(this.state.data);
-              return { key: this.jsonKey, data: this.state.data };
+              return {key: this.jsonKey, data: this.state.data};
             },
             onSuccess: () => {
               modal.destroy();
@@ -277,7 +264,7 @@ class ThisPage extends Component {
             operation: [
               {
                 type: 'submit',
-                label: I18n.tr('sure'),
+                label: I18n('SURE'),
               },
             ],
           }}
@@ -294,9 +281,9 @@ class ThisPage extends Component {
     this.setState({
       loading: true,
     });
-    Index.real('System.Data.edit', { key: this.jsonKey, data: this.state.data }, (res) => {
+    Api.real('System.Data.edit', {key: this.jsonKey, data: this.state.data}, (res) => {
       if (res.code === 200) {
-        message.success(I18n.tr('deleteSuccess'));
+        message.success(I18n('DELETE_SUCCESS'));
         this.setState({
           loading: false,
           data: values,
@@ -317,9 +304,9 @@ class ThisPage extends Component {
     this.setState({
       loading: true,
     });
-    Index.real('System.Data.edit', { key: this.jsonKey, data: this.state.data }, (res) => {
+    Api.real('System.Data.edit', {key: this.jsonKey, data: this.state.data}, (res) => {
       if (res.code === 200) {
-        message.success(I18n.tr('moveUpSuccess'));
+        message.success(I18n('MOVE_UP_SUCCESS'));
         this.setState({
           loading: false,
           data: this.state.data,
@@ -340,9 +327,9 @@ class ThisPage extends Component {
     this.setState({
       loading: true,
     });
-    Index.real('System.Data.edit', { key: this.jsonKey, data: this.state.data }, (res) => {
+    Api.real('System.Data.edit', {key: this.jsonKey, data: this.state.data}, (res) => {
       if (res.code === 200) {
-        message.success(I18n.tr('moveDownSuccess'));
+        message.success(I18n('MOVE_DOWN_SUCCESS'));
         this.setState({
           loading: false,
           data: this.state.data,
@@ -359,16 +346,16 @@ class ThisPage extends Component {
     const data = val[key];
     const dataType = typeof data;
     switch (dataType) {
-    case 'object':
-      if (Array.isArray(data)) {
-        tpl = data.join(',');
-      } else {
-        tpl = JSON.stringify(data);
-      }
-      break;
-    default:
-      tpl = data;
-      break;
+      case 'object':
+        if (Array.isArray(data)) {
+          tpl = data.join(',');
+        } else {
+          tpl = JSON.stringify(data);
+        }
+        break;
+      default:
+        tpl = data;
+        break;
     }
     return (<span key={index}>{tpl}</span>);
   };
@@ -379,52 +366,52 @@ class ThisPage extends Component {
         let tpl = null;
         const id = `h${o.type}_${index}_${idx}`;
         switch (o.type) {
-        case 'button':
-          tpl = (
-            <Button
-              id={id}
-              style={styles.operationBtn}
-              key={idx}
-              {...o.button} // see https://alibaba.github.io/ice/component/button
-              onClick={o.onClick !== undefined ? o.onClick.bind(index, record) : undefined}
-            >
-              {o.name}
-            </Button>
-          );
-          break;
-        case 'orderingUp':
-          tpl = (
-            <Button
-              disabled={index <= 0}
-              id={id}
-              style={styles.operationBtn}
-              key={idx}
-              {...o.button} // see https://alibaba.github.io/ice/component/button
-              onClick={o.onClick !== undefined ? o.onClick.bind(index, record) : undefined}
-            >
-              {o.name}
-            </Button>
-          );
-          break;
-        case 'orderingDown':
-          tpl = (
-            <Button
-              disabled={index >= this.state.data.length - 1}
-              id={id}
-              style={styles.operationBtn}
-              key={idx}
-              {...o.button} // see https://alibaba.github.io/ice/component/button
-              onClick={o.onClick !== undefined ? o.onClick.bind(index, record) : undefined}
-            >
-              {o.name}
-            </Button>
-          );
-          break;
-        case 'balloon':
-          tpl = <CommonBalloon key={idx} o={o} index={index} record={record} />;
-          break;
-        default:
-          break;
+          case 'button':
+            tpl = (
+              <Button
+                id={id}
+                style={styles.operationBtn}
+                key={idx}
+                {...o.button} // see https://alibaba.github.io/ice/component/button
+                onClick={o.onClick !== undefined ? o.onClick.bind(index, record) : undefined}
+              >
+                {o.name}
+              </Button>
+            );
+            break;
+          case 'orderingUp':
+            tpl = (
+              <Button
+                disabled={index <= 0}
+                id={id}
+                style={styles.operationBtn}
+                key={idx}
+                {...o.button} // see https://alibaba.github.io/ice/component/button
+                onClick={o.onClick !== undefined ? o.onClick.bind(index, record) : undefined}
+              >
+                {o.name}
+              </Button>
+            );
+            break;
+          case 'orderingDown':
+            tpl = (
+              <Button
+                disabled={index >= this.state.data.length - 1}
+                id={id}
+                style={styles.operationBtn}
+                key={idx}
+                {...o.button} // see https://alibaba.github.io/ice/component/button
+                onClick={o.onClick !== undefined ? o.onClick.bind(index, record) : undefined}
+              >
+                {o.name}
+              </Button>
+            );
+            break;
+          case 'balloon':
+            tpl = <CommonBalloon key={idx} o={o} index={index} record={record}/>;
+            break;
+          default:
+            break;
         }
         return tpl;
       })
@@ -433,27 +420,29 @@ class ThisPage extends Component {
 
   render() {
     return (
-      <Spin style={styles.loading} shape="dot-circle" color="#aaaaaa" spinning={this.state.loading === true || this.state.data === null}>
+      <Spin style={styles.loading} shape="dot-circle" color="#aaaaaa"
+            spinning={this.state.loading === true || this.state.data === null}>
         <div style={styles.formContent}>
           <h2 style={styles.formTitle}>
             <div>
-              {this.jsonName}{I18n.tr('manage')}
-              <Button type="primary" size="small" style={{ marginLeft: '3px' }} onClick={this.doInsert}>
-                {I18n.tr('add')}
+              {this.jsonName}{I18n('MANAGE')}
+              <Button type="primary" size="small" style={{marginLeft: '3px'}} onClick={this.doInsert}>
+                {I18n('ADD')}
               </Button>
             </div>
           </h2>
           {
             this.state.data !== null &&
             <Table dataSource={this.state.data}>
-              <Table.Column title={I18n.tr('serial')} dataIndex="serial" width={100} />
+              <Table.Column title={I18n('SERIAL')} dataIndex="serial" width={100}/>
               {
                 this.jsonShow.map((val, idx) => {
                   const renderColumn = (typeof val.renderColumn === 'function') ? val.renderColumn : this.renderColumn;
-                  return <Table.Column key={idx} title={val.title} cell={renderColumn.bind(this, val.dataIndex)} {...val.params} />;
+                  return <Table.Column key={idx} title={val.title}
+                                       cell={renderColumn.bind(this, val.dataIndex)} {...val.params} />;
                 })
               }
-              <Table.Column title={I18n.tr('operation')} cell={this.renderOperations} />
+              <Table.Column title={I18n('OPERATION')} cell={this.renderOperations}/>
             </Table>
           }
         </div>

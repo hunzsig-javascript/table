@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Balloon } from '@icedesign/base';
-import { Button } from 'antd';
+import React, {Component} from 'react';
+import {Balloon} from '@icedesign/base';
+import {Button} from 'antd';
 import I18n from "../../common/I18n";
 
 export default class FilterTableBalloon extends Component {
@@ -33,7 +33,7 @@ export default class FilterTableBalloon extends Component {
   // 比如对于click类型,会在点击button的时候触发和点击空白区域的时候触发;
   // 对于hover类型,会在mouseentter,mouseleave的时候触发;
   handleVisibleChange(visible) {
-    this.setState({ visible });
+    this.setState({visible});
   }
 
   renderActions = () => {
@@ -46,31 +46,31 @@ export default class FilterTableBalloon extends Component {
         if (o.condition !== undefined && Array.isArray(o.condition)) {
           o.condition.forEach((cond) => {
             switch (cond.cond) {
-            case 'in':
-              if (!cond.value.includes(this.props.record[cond.field])) {
-                show = false;
-              }
-              break;
-            case 'like':
-            case 'strpos':
-              if (this.props.record[cond.field].indexOf(cond.value) === -1) {
-                show = false;
-              }
-              break;
-            case 'neq':
-            case '!=':
-            case '<>':
-              if (this.props.record[cond.field] === cond.value) {
-                show = false;
-              }
-              break;
-            case 'eq':
-            case '=':
-            default:
-              if (this.props.record[cond.field] !== cond.value) {
-                show = false;
-              }
-              break;
+              case 'in':
+                if (!cond.value.includes(this.props.record[cond.field])) {
+                  show = false;
+                }
+                break;
+              case 'like':
+              case 'strpos':
+                if (this.props.record[cond.field].indexOf(cond.value) === -1) {
+                  show = false;
+                }
+                break;
+              case 'neq':
+              case '!=':
+              case '<>':
+                if (this.props.record[cond.field] === cond.value) {
+                  show = false;
+                }
+                break;
+              case 'eq':
+              case '=':
+              default:
+                if (this.props.record[cond.field] !== cond.value) {
+                  show = false;
+                }
+                break;
             }
           });
         }
@@ -110,7 +110,7 @@ export default class FilterTableBalloon extends Component {
         visible={this.state.visible}
         onVisibleChange={this.handleVisibleChange.bind(this)}
       >
-        <div style={{ textAlign: 'center' }}>
+        <div style={{textAlign: 'center'}}>
           <div style={styles.balloonText}>{this.o.title}</div>
           {this.renderActions()}
           <Button
@@ -118,7 +118,7 @@ export default class FilterTableBalloon extends Component {
             size="small"
             onClick={this.cancel.bind(this)}
           >
-            {I18n.tr('cancel')}
+            {I18n('CANCEL')}
           </Button>
         </div>
       </Balloon>

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Spin } from 'antd';
+import React, {Component} from 'react';
+import {Spin} from 'antd';
 import I18n from "../../common/I18n";
 
 export default class HRouterLoading extends Component {
@@ -15,15 +15,15 @@ export default class HRouterLoading extends Component {
   render() {
     if (this.props.error) {
       return (
-        <div style={{ textAlign: 'center', width: '100%', height: '100px', lineHeight: '100px' }}>
-          <p>{I18n.tr('filterError')}</p>
+        <div style={{textAlign: 'center', width: '100%', height: '100px', lineHeight: '100px'}}>
+          <p>{I18n('FILTER_ERROR')}</p>
           <p>{this.props.error}</p>
         </div>
       );
     } else if (this.props.pastDelay) {
       return (
-        <div style={{ textAlign: 'center', width: '100%', height: '100px', lineHeight: '100px' }}>
-          <Spin tip={I18n.tr('rendering')} size="large" />
+        <div style={{textAlign: 'center', width: '100%', height: '100px', lineHeight: '100px'}}>
+          <Spin tip={I18n('RENDERING')} size="large"/>
         </div>
       );
     }

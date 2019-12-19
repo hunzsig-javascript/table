@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
-import {Table} from '@icedesign/base';
-import {Spin, Button, Icon, Tag, Modal, Pagination, Checkbox} from 'antd';
-import ZH_CN from 'antd/lib/locale-provider/zh_CN';
+import {Spin, Button, Icon, Tag, Modal, Pagination, Checkbox, Table} from 'antd';
 import FilterForm from './../Filter';
 import FilterTableBalloon from './FilterTableBalloon';
-import Index from '../../common/Api';
-import Parse from '../../common/Parse';
-import I18n from "../../common/I18n";
+import {Api} from 'api';
+import {I18n, Parse} from "foundation";
 
 export default class EnhanceTable extends Component {
   static defaultProps = {};
@@ -16,7 +13,7 @@ export default class EnhanceTable extends Component {
     if (typeof this.props.onRef === 'function') {
       this.props.onRef(this);
     }
-    this.title = this.props.title || I18n.tr('oneList');
+    this.title = this.props.title || I18n('ONE_LIST');
     this.hasBorder = typeof this.props.hasBorder === 'boolean' ? this.props.hasBorder : true;
     this.maxBodyHeight = this.props.maxBodyHeight || 500;
     this.isTree = this.props.isTree || false;
@@ -26,8 +23,8 @@ export default class EnhanceTable extends Component {
     this.onAdd = this.props.table.onAdd;
     this.onSelected = this.props.table.onSelected || null;
     this.onAdd2 = this.props.table.onAdd2;
-    this.onAddName = this.props.table.onAddName || I18n.tr('add');
-    this.onAdd2Name = this.props.table.onAdd2Name || '添加';
+    this.onAddName = this.props.table.onAddName || I18n('ADD');
+    this.onAdd2Name = this.props.table.onAdd2Name || I18n('ADD');
     this.onExcelPush = this.props.table.onExcelPush;
     this.onExcelPull = this.props.table.onExcelPull;
     this.onPrint = this.props.table.onPrint;
@@ -48,7 +45,7 @@ export default class EnhanceTable extends Component {
       isSearch: typeof this.props.isSearch === 'boolean' ? this.props.isSearch : false,
     };
     // 加序号
-    this.state.display.unshift({field: 'serial', name: I18n.tr('serial'), width: 63, align: 'center'});
+    this.state.display.unshift({field: 'serial', name: I18n('SERIAL'), width: 63, align: 'center'});
     // 如果遇到分页的设定，在开头加上分页条数
     if (this.state.params.page === 1) {
       this.state.params.pageCurrent = 0;
@@ -84,7 +81,7 @@ export default class EnhanceTable extends Component {
     if (typeof this.filterFormatter === 'function') {
       params = this.filterFormatter(params);
     }
-    Index.real(this.scope, params, (res) => {
+    Api.real(this.scope, params, (res) => {
       this.setState({
         loading: false,
       });
@@ -172,7 +169,7 @@ export default class EnhanceTable extends Component {
       maskClosable: true,
       className: 'vertical-center-modal',
       content: this.renderChooseCol(),
-      title: I18n.tr('chooseDisplayCol'),
+      title: I18n('CHOOSE_DISPLAY_COL'),
       onOk: () => {
         this.changedCols.forEach((ccf) => {
           this.props.table.display.forEach((ptd) => {
@@ -193,7 +190,7 @@ export default class EnhanceTable extends Component {
       width: 650,
       maskClosable: true,
       className: 'vertical-center-modal hideFooter',
-      title: title || I18n.tr('bigPicture'),
+      title: title || I18n('BIG_PICTURE'),
       content: (
         <img style={{width: '500px', verticalAlign: 'middle'}} alt={src} src={Parse.img(src)}/>
       ),
@@ -320,16 +317,21 @@ export default class EnhanceTable extends Component {
         <h2 style={styles.contentTitle}>
           <div>
             {this.title}
-            {typeof this.onAdd === 'function' && <Button type="primary" size="small" style={{marginLeft: '3px'}}
-                                                         onClick={this.onAdd}>{this.onAddName}</Button>}
-            {typeof this.onAdd2 === 'function' && <Button type="default" size="small" style={{marginLeft: '3px'}}
-                                                          onClick={this.onAdd2}>{this.onAdd2Name}</Button>}
-            {typeof this.onExcelPush === 'function' && <Button type="default" size="small" style={{marginLeft: '3px'}}
-                                                               onClick={this.onExcelPush}>{I18n.tr('import')}</Button>}
-            {typeof this.onExcelPull === 'function' && <Button type="dashed" size="small" style={{marginLeft: '3px'}}
-                                                               onClick={this.onExcelPull}>{I18n.tr('export')}</Button>}
-            {typeof this.onPrint === 'function' && <Button type="default" size="small" style={{marginLeft: '3px'}}
-                                                           onClick={this.onPrint}>{I18n.tr('print')}</Button>}
+            {typeof this.onAdd === 'function'
+            && <Button type="primary" size="small" style={{marginLeft: '3px'}}
+                       onClick={this.onAdd}>{this.onAddName}</Button>}
+            {typeof this.onAdd2 === 'function'
+            && <Button type="default" size="small" style={{marginLeft: '3px'}}
+                       onClick={this.onAdd2}>{this.onAdd2Name}</Button>}
+            {typeof this.onExcelPush === 'function'
+            && <Button type="default" size="small" style={{marginLeft: '3px'}}
+                       onClick={this.onExcelPush}>{I18n('IMPORT')}</Button>}
+            {typeof this.onExcelPull === 'function'
+            && <Button type="dashed" size="small" style={{marginLeft: '3px'}}
+                       onClick={this.onExcelPull}>{I18n('EXPORT')}</Button>}
+            {typeof this.onPrint === 'function'
+            && <Button type="default" size="small" style={{marginLeft: '3px'}}
+                       onClick={this.onPrint}>{I18n('PRINT')}</Button>}
           </div>
         </h2>
         <div style={{position: 'relative', height: '30px'}}>
@@ -337,26 +339,27 @@ export default class EnhanceTable extends Component {
             {
               this.state.page &&
               <div style={{position: 'absolute', top: 0, textAlign: 'left'}}>
-                <Tag>{I18n.tr('total') + this.state.page.total + I18n.tr('results')}</Tag>
-                <Tag>{I18n.tr('inPage') + (this.state.result ? this.state.result.length : 0) + I18n.tr('results')}</Tag>
+                <Tag>{I18n('TOTAL') + this.state.page.total + I18n('RESULTS')}</Tag>
+                <Tag>{I18n('IN_PAGE') + (this.state.result ? this.state.result.length : 0) + I18n('RESULTS')}</Tag>
               </div>
             }
             {
               !this.state.page &&
               <div style={{position: 'absolute', top: 0, textAlign: 'left'}}>
-                <Tag>{I18n.tr('total') + (this.state.result ? this.state.result.length : 0) + I18n.tr('results')}</Tag>
+                <Tag>{I18n('TOTAL') + (this.state.result ? this.state.result.length : 0) + I18n('RESULTS')}</Tag>
               </div>
             }
             <Button.Group size="small">
               <Button type="primary" disabled={this.state.loading} onClick={this.apiQuery}>
                 <Icon
-                  type={this.state.loading ? 'loading' : 'reload'}/>{this.state.loading ? I18n.tr('wait') : I18n.tr('fresh')}
+                  type={this.state.loading ? 'loading' : 'reload'}/>{this.state.loading ? I18n('WAIT') : I18n('FRESH')}
               </Button>
-              {this.filter.length > 0 && <Button type={this.state.isSearch ? 'primary' : 'default'}
-                                                 onClick={this.colSearch}> {this.state.isSearch ? I18n.tr('searchHide') : I18n.tr('searchShow')} </Button>}
+              {this.filter.length > 0
+              && <Button type={this.state.isSearch ? 'primary' : 'default'}
+                         onClick={this.colSearch}> {this.state.isSearch ? I18n('SEARCH_HIDE') : I18n('SEARCH_SHOW')} </Button>}
               <Button type={this.state.isLockCol ? 'primary' : 'default'}
-                      onClick={this.colLock}> {this.state.isLockCol ? I18n.tr('tableHeadUnLock') : I18n.tr('tableHeadLock')} </Button>
-              <Button onClick={this.colChoose}> {I18n.tr('chooseDisplayCol')}({this.changedCols.length}) </Button>
+                      onClick={this.colLock}> {this.state.isLockCol ? I18n('TABLE_HEAD_UN_LOCK') : I18n('TABLE_HEAD_LOCK')} </Button>
+              <Button onClick={this.colChoose}> {I18n('CHOOSE_DISPLAY_COL')}({this.changedCols.length}) </Button>
             </Button.Group>
           </div>
         </div>
@@ -395,7 +398,7 @@ export default class EnhanceTable extends Component {
             {
               this.operation.length > 0 &&
               <Table.Column
-                title={I18n.tr('operation')}
+                title={I18n('OPERATION')}
                 width={this.operationWidth}
                 cell={this.renderOperations}
               />
