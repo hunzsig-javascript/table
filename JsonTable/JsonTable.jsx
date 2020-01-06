@@ -3,7 +3,7 @@ import {Spin, message, Button, Alert, Modal, Table} from 'antd';
 import CommonBalloon from './../CommonBalloon';
 import {DesktopForm} from 'form';
 import {Api} from 'api';
-import {I18n} from "foundation";
+import {I18n} from "basic";
 
 class ThisPage extends Component {
   static propTypes = {};

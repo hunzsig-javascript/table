@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Tag, Modal, Pagination, Checkbox, Table} from 'antd';
 import FilterForm from './../Filter';
 import FilterBalloon from './FilterBalloon';
-import {I18n, Parse} from "foundation";
+import {I18n, Parse} from "basic";
 
 export default class LocalTable extends Component {
   static defaultProps = {};

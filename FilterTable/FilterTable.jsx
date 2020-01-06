@@ -3,7 +3,7 @@ import {Spin, Button, Icon, Tag, Modal, Pagination, Checkbox, Table} from 'antd'
 import FilterForm from './../Filter';
 import FilterTableBalloon from './FilterTableBalloon';
 import {Api} from 'api';
-import {I18n, Parse} from "foundation";
+import {I18n, Parse} from "basic";
 
 export default class EnhanceTable extends Component {
   static defaultProps = {};

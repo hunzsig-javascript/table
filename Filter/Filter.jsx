@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Col, DatePicker, TimePicker, Button, Select, Cascader, TreeSelect, Input, Icon} from 'antd';
-import {I18n} from "foundation";
+import {I18n} from "basic";
 
 const {Option} = Select;
 const {MonthPicker, YearPicker, RangePicker} = DatePicker;
